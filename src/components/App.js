@@ -1,12 +1,27 @@
 import React from "react";
-import UsersList from "./UsersList/UsersListContainer";
+import UsersListContainer from "./UsersList/UsersListContainer";
+import UsersList from "./UsersList/UsersList";
+import Controls from "./Controls/Controls";
 
-const App = () => {
-  return (
-    <>
-      <UsersList />
-    </>
-  );
-};
+// const App = () => {
+//   return (
+//     <>
+//       <UsersList />
+//     </>
+//   );
+// };
+
+class App extends React.Component {
+  render() {
+    return (
+      <>
+        <UsersListContainer>
+          <UsersList />
+        </UsersListContainer>
+        <Controls />
+      </>
+    );
+  }
+}
 
 export default App;
