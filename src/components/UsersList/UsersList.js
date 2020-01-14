@@ -7,11 +7,9 @@ const UsersList = ({ data, user }) => {
     <div className="example">
       <ul className="example-list">
         {data.map(el => (
-          <div className="example">
-            <li key={el.id}>
-              <p>{`${el.id} ${el.name} ${el.surname}`}</p>
-            </li>
-          </div>
+          <li className="example" key={el.id}>
+            <p>{`${el.id} ${el.name} ${el.surname}`}</p>
+          </li>
         ))}
       </ul>
       <User user={user} />
@@ -20,7 +18,7 @@ const UsersList = ({ data, user }) => {
 };
 
 UsersList.propTypes = {
-  users: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+  users: PropTypes.arrayOf(PropTypes.shape({}))
 };
 
 export default UsersList;

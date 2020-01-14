@@ -3,51 +3,75 @@ import { connect } from "react-redux";
 import axios from "axios";
 import { getItems } from "../../redux/users/usersSelectors";
 import * as UsersOperation from "../../redux/users/usersOperations";
-import Controls from "../Controls/Controls";
+// import Controls from "../Controls/Controls";
 
 class UsersListContainer extends Component {
-  // state = {
-  //   currentPage: null,
-  //   pageCount: null,
-  // };
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      currentPage: null,
-      pageCount: 0
-    };
-  }
+  state = {
+    currentPage: null,
+    pageCount: null,
+    user: ""
+  };
 
-  // componentDidMount() {
-  //   const { getUsers } = this.props;
-  //   // getUsers();
-  //   // this.interval = setInterval(() => this.setState({ user: users[0] }), 1000);
-  // }
-
-  async componentWillMount() {
+  async componentDidMount() {
     const { getUsers } = this.props;
     await getUsers();
     const baseUrl = "https://tested-23ea6.firebaseio.com/users.json";
     const users = await axios.get(baseUrl);
     let pageCount = parseInt(users.data.length / 5);
+
+    const changeUser = () => {
+      setInterval(() => {
+        function getRandomIntInclusive(min, max) {
+          min = Math.ceil(min);
+          max = Math.floor(max);
+          return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        let i = getRandomIntInclusive(0, users.data.length - 1);
+        this.setState({
+          user: `${users.data[i].name} ${users.data[i].surname}`
+        });
+      }, 8000);
+    };
+    changeUser();
     this.setState({
       currentPage: 1,
-      pageCount
+      pageCount,
+      user: `${users.data[0].name} ${users.data[0].surname}`
     });
   }
 
   componentDidUpdate() {
-    const startingPage = this.props.startingPage ? this.props.startingPage : 1;
+    // const startingPage = this.props.startingPage ? this.props.startingPage : 1;
     const data = this.props.users;
     const pageSize = this.props.pageSize;
 
     if (data.length % pageSize > 0) {
-      this.state.pageCount++;
+      this.setState.pageCount++;
     }
   }
 
   setCurrentPage(num) {
     this.setState({ currentPage: num });
+  }
+
+  createControls() {
+    let controls = [];
+    const pageCount = this.state.pageCount;
+    for (let i = 1; i <= pageCount; i++) {
+      const baseClassName = "pagination-controls__button";
+      const activeClassName =
+        i === this.state.currentPage ? `${baseClassName}--active` : "";
+      controls.push(
+        <div
+          key={i}
+          className={`${baseClassName} ${activeClassName}`}
+          onClick={() => this.setCurrentPage(i)}
+        >
+          {i}
+        </div>
+      );
+    }
+    return controls;
   }
 
   createPaginatedData() {
@@ -61,19 +85,21 @@ class UsersListContainer extends Component {
   }
 
   render() {
-    const { pageCount, currentPage } = this.state;
+    const { user } = this.state;
     return (
       <div className="pagination">
         <div className="pagination-controls">
-          <Controls
+          {/* <Controls
             pageCount={pageCount}
             currentPage={currentPage}
             setCurrentPage={this.setCurrentPage}
-          />
+          /> */}
+          {this.createControls()}
         </div>
         <div className="pagination-results">
           {React.cloneElement(this.props.children, {
-            data: this.createPaginatedData()
+            data: this.createPaginatedData(),
+            user: user
           })}
         </div>
       </div>
