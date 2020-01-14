@@ -2,6 +2,7 @@ import React from "react";
 
 const Controls = ({ pageCount, currentPage, setCurrentPage }) => {
   let controls = [];
+  console.log("setCurrentPage :", setCurrentPage);
 
   for (let i = 1; i <= pageCount; i++) {
     const baseClassName = "pagination-controls__button";
